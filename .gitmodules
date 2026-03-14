@@ -1,0 +1,40 @@
+[submodule "src/ddsm115_driver"]
+	path = src/ddsm115_driver
+	url = git@github.com:Butler-Project/butler-ddsm115-driver.git
+	branch = main
+[submodule "src/imu_driver"]
+	path = src/imu_driver
+	url = git@github.com:Butler-Project/butler-imu-driver.git
+	branch = main
+[submodule "src/odometry_node"]
+	path = src/odometry_node
+	url = git@github.com:Butler-Project/butler-odometry-node.git
+	branch = main
+[submodule "src/robot_launch"]
+	path = src/robot_launch
+	url = git@github.com:Butler-Project/butler-robot-launch.git
+	branch = main
+[submodule "src/robot_localization"]
+	path = src/robot_localization
+	url = git@github.com:Butler-Project/butler-robot-localization.git
+	branch = main
+[submodule "src/robot_tf_publisher"]
+	path = src/robot_tf_publisher
+	url = git@github.com:Butler-Project/butler-robot-tf.git
+	branch = main
+[submodule "src/ydlidar_ros2_driver"]
+	path = src/ydlidar_ros2_driver
+	url = git@github.com:Butler-Project/butler-ydlidar-ros2-driver.git
+	branch = main
+[submodule "src/odrive_node"]
+	path = src/odrive_node
+	url = git@github.com:Butler-Project/butler-odrive-node.git
+	branch = main
+[submodule "src/stabilization_controller"]
+	path = src/stabilization_controller
+	url = git@github.com:Butler-Project/butler-stabilization-controller.git
+	branch = main
+[submodule "src/safety_node"]
+	path = src/safety_node
+	url = git@github.com:Butler-Project/butler-safety-node.git
+	branch = main
