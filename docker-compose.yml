@@ -1,0 +1,18 @@
+version: '3.8'
+
+services:
+  robot-dev:
+    build:
+      context: ./docker
+    image: robot-ws-dev-image
+    container_name: robot-ws-dev
+    # Mount the parent directory (which is the root of the workspace) to /robot-ws
+    volumes:
+      - ./:/robot-ws
+    # Use host network to allow Foxglove Bridge/ROS 2 DDS discovery
+    network_mode: "host"
+    # Keep the container running to interact with via terminal
+    stdin_open: true 
+    tty: true
+    # Since we added source to .bashrc, this just launches bash natively
+    command: bash
