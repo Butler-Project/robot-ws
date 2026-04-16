@@ -61,3 +61,21 @@ You can easily pass CLI arguments to tailor behavior:
 ```bash
 ros2 launch robot_launch robot.launch.py enable_rl_balancer:=true
 ```
+
+### Dev UI 
+
+Now ou can visualize ROS2 data using the Foxglove UI. You need to log in with your Google account at the following link:
+
+```bash 
+https://foxglove.dev
+```
+
+after that select --> ROSS2, and paste the web socket adress from running foxglove_bridge instance that is lives inside the ross2 as package.
+
+By default it's:
+
+```bash 
+ws://127.0.0.1:8765
+```
+
+when you connected succsesefully, import the foxglove panel file which is will be provided soon
