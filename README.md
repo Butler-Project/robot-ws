@@ -22,13 +22,19 @@ You can natively compile the system on a matching `aarch64` / `x86_64` machine o
 ### Using Docker (Highly Recommended)
 We provide a simple Dockerization technique to ensure compiling code always perfectly mirrors the robot's ecosystem environment.
 
-1. **Spin up the Docker Container**:
+1. **Ensure that all modules are downloaded and up to date**
+
+```
+git submodule update --init --recursive
+ ```
+
+2. **Spin up the Docker Container**:
    We recommend using `docker compose` to effortlessly mount this workspace and boot into it:
    ```bash
    docker compose run --rm robot-dev
    # Alternatively via run: docker run --rm -it -v $(pwd):/robot-ws -w /robot-ws ros:humble-ros-base bash
    ```
-2. **Compile the Workspace**:
+3. **Compile the Workspace**:
    Inside the Docker container terminal (which automatically sources the base ROS distribution), simply invoke `colcon`:
    ```bash
    colcon build --symlink-install
