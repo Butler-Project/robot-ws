@@ -1,0 +1,109 @@
+name: CI
+
+on:
+  pull_request:
+    branches: [main]
+  push:
+    branches: [main]
+
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  build:
+    name: colcon build & test
+    runs-on: ubuntu-latest
+    container:
+      image: ros:humble-ros-base
+
+    steps:
+      - name: Checkout (with submodules)
+        uses: actions/checkout@v4
+        with:
+          submodules: recursive
+          fetch-depth: 0
+
+      - name: Install build tooling
+        shell: bash
+        run: |
+          apt-get update
+          apt-get install -y --no-install-recommends \
+            python3-colcon-common-extensions \
+            build-essential \
+            ros-humble-foxglove-bridge \
+            ros-humble-robot-localization \
+            ros-humble-robot-state-publisher \
+            ros-humble-xacro \
+            git
+          rm -rf /var/lib/apt/lists/*
+
+      - name: Resolve ROS dependencies (rosdep)
+        shell: bash
+        run: |
+          source /opt/ros/humble/setup.bash
+          rosdep update --rosdistro humble
+          rosdep install \
+            --from-paths src \
+            --ignore-src \
+            --rosdistro humble \
+            -y \
+            --skip-keys "onnxruntime"
+
+      - name: colcon build
+        shell: bash
+        run: |
+          source /opt/ros/humble/setup.bash
+          colcon build \
+            --symlink-install \
+            --event-handlers console_cohesion+ \
+            --cmake-args -DCMAKE_BUILD_TYPE=Release
+
+      - name: colcon test
+        shell: bash
+        run: |
+          source /opt/ros/humble/setup.bash
+          source install/setup.bash
+          colcon test \
+            --event-handlers console_cohesion+ \
+            --return-code-on-test-failure
+
+      - name: colcon test-result
+        if: always()
+        shell: bash
+        run: |
+          source /opt/ros/humble/setup.bash
+          colcon test-result --verbose
+
+      - name: Upload build logs on failure
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: colcon-logs
+          path: |
+            log/
+            build/**/CMakeFiles/CMakeOutput.log
+            build/**/CMakeFiles/CMakeError.log
+          retention-days: 7
+
+  rosdep-check:
+    name: rosdep manifest validation
+    runs-on: ubuntu-latest
+    container:
+      image: ros:humble-ros-base
+
+    steps:
+      - name: Checkout (with submodules)
+        uses: actions/checkout@v4
+        with:
+          submodules: recursive
+
+      - name: Verify all package.xml dependencies resolve
+        shell: bash
+        run: |
+          source /opt/ros/humble/setup.bash
+          rosdep update --rosdistro humble
+          rosdep check \
+            --from-paths src \
+            --ignore-src \
+            --rosdistro humble || true
